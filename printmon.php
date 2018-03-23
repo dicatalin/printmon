@@ -25,7 +25,8 @@ $nc=0;
 $ips = explode(PHP_EOL, $_POST["ip"]);
 #print_r($ips);
 echo "<table><tr><th>Nr.</th><th>IP</th><th>MODEL</th><th>SERIAL NUMBER</th><th>PAGE COUNTER</th></tr>";
-foreach ($ips as $ip) { 
+foreach ($ips as $ip) {
+if (!empty($ip)){ 
 	$session = new SNMP(SNMP::VERSION_2c, $ip, "public");
 		$model = $session->get("mib-2.43.5.1.1.16.1");
 		$sn = $session->get("mib-2.43.5.1.1.17.1");
@@ -36,8 +37,11 @@ $serial_cl=str_replace("\"","",str_replace("STRING: ","","$sn\n"));
 $pc_cl=str_replace("Counter32:","","$pc\n");
 $nc=$nc+1;
 echo "<tr><td>" . $nc . "</td><td>" . $ip . "</td><td>" . $model_cl . "</td><td>" . $serial_cl . "</td><td>" . $pc_cl . "</td>";
+}else{
+# echo "<tr><td>" . $nc . "</td><td>" . $ip . "</td><td>no ping</td><td>no ping</td><td>no ping</td>";
 }
-echo "</table>";
+}
+echo "</table>"
 ?>
 </center>
 </body>
